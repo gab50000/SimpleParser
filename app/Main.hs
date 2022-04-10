@@ -36,7 +36,7 @@ parseOp op f = do
 
 parseAdd :: Parser Expr
 parseAdd = do
-    num1 <- parseBracketed <|> parseMul <|> parseLit
+    num1 <- parseMul <|> parseBracketed <|> parseLit
     skipWhile isSpace
     string "+"
     skipWhile isSpace
@@ -60,19 +60,21 @@ parseBracketed = do
     return expr
 
 parseExpr :: Parser Expr
-parseExpr = parseBracketed <|> parseAdd <|> parseMul <|> parseLit
+parseExpr = parseAdd <|> parseMul <|> parseLit
 
 printExpr :: Text -> IO ()
 printExpr input = do
     let expr = fromRight (Lit (-1)) (parseOnly parseExpr input)
     putStr input
     putStr " = "
-    print expr
+    print $ eval expr
 
 main :: IO ()
 main = do
     forM_
         [ "1+2*3+4+5"
+        , "(1+2)*(3+4)+5"
         , "2*2+3"
+        , "2*(2+3)"
         ]
         printExpr
