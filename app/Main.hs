@@ -40,7 +40,7 @@ parseAdd = do
     skipWhile isSpace
     string "+"
     skipWhile isSpace
-    num2 <- parseExpr <|> parseLit
+    num2 <- parseExpr <|> parseBracketed
     return $ Add num1 num2
 
 parseMul :: Parser Expr
@@ -76,5 +76,6 @@ main = do
         , "(1+2)*(3+4)+5"
         , "2*2+3"
         , "2*(2+3)"
+        , "4+(3+(1+2)*3)"
         ]
         printExpr
